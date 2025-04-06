@@ -17,23 +17,23 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public Product addProduct(ProductDTO productDTO) {
-        Optional<Product> lastProduct = productRepository.findTopByCurrencyOrderByDateDesc(productDTO.getCurrency());
-
+        List<Product> allProducts = productRepository.findByCurrencyOrderByDateDesc(productDTO.getCurrency());
+        //System.out.println(allProducts);
         Product newProduct = new Product();
         newProduct.setDate(LocalDate.now());
         newProduct.setCurrency(productDTO.getCurrency());
         newProduct.setCost(productDTO.getCost());
         newProduct.setCheaper(false);
-        if (lastProduct.isPresent()) {
-            Product last = lastProduct.get();
-            if (productDTO.getCost() < last.getCost()) {
+
+        if (!allProducts.isEmpty()) {
+            Product lastProduct = allProducts.get(allProducts.size() - 1);
+            if (productDTO.getCost() < lastProduct.getCost()) {
                 newProduct.setCheaper(true);
             }
         }
 
         return productRepository.save(newProduct);
     }
-
     public Product updateProduct(Long id, Product updatedProduct) {
         Optional<Product> existingProduct = productRepository.findById(id);
         if (existingProduct.isPresent()) {
