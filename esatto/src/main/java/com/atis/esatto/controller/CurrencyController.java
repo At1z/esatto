@@ -10,6 +10,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.net.URI;
 
 @RestController
@@ -43,7 +46,31 @@ public class CurrencyController {
         // Send the request and get the response as a String
         ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
 
-        // Return the response body (the exchange rate data)
-        return response.getBody();
+        try {
+            // Parse the JSON response
+            String responseBody = response.getBody();
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(responseBody);
+
+            // Extract the base currency
+            String baseCurrency = rootNode.get("base").asText();
+
+            // Extract the value of the exchange rate
+            String value = rootNode.get("rate").get(0).get("value").asText();
+
+            // Extract the time and get the year, month, and day
+            String time = rootNode.get("time").asText();
+            String[] timeParts = time.split(" ")[0].split("-");  // Split the date (yyyy-MM-dd)
+
+            String year = timeParts[0];
+            String month = timeParts[1];
+            String day = timeParts[2];
+
+            // Return the extracted information
+            return "Base: " + baseCurrency + ", Value: " + value + ", Date: " + year + "-" + month + "-" + day;
+
+        } catch (Exception e) {
+            return "Error processing the response: " + e.getMessage();
+        }
     }
 }
