@@ -1,7 +1,6 @@
 package com.atis.esatto.service;
 
 import com.atis.esatto.db_creation.Product;
-import com.atis.esatto.dto.ProductDTO;
 import com.atis.esatto.repository.ProductRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class CurrencyService {
+public class APIService {
 
     @Autowired
     private ProductRepository productRepository;
