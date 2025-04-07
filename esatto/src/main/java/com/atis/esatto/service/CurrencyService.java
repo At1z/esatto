@@ -31,25 +31,8 @@ public class CurrencyService {
 
     private static final String API_URL = "https://www.ratexchanges.com/api/v1/exchange-rates";
 
-    public Product addProduct(ProductDTO productDTO) {
-        List<Product> allProducts = productRepository.findByCurrencyOrderByDateDesc(productDTO.getCurrency());
-        Product newProduct = new Product();
-        newProduct.setDate(LocalDate.now());
-        newProduct.setCurrency(productDTO.getCurrency());
-        newProduct.setCost(productDTO.getCost());
-        newProduct.setCheaper(false);
 
-        if (!allProducts.isEmpty()) {
-            Product lastProduct = allProducts.get(allProducts.size() - 1);
-            if (productDTO.getCost() < lastProduct.getCost()) {
-                newProduct.setCheaper(true);
-            }
-        }
-
-        return productRepository.save(newProduct);
-    }
-
-    public String getExchangeRate(String base, String target) {
+    public Product getExchangeRate(String base, String target) {
         RestTemplate restTemplate = new RestTemplate();
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -65,15 +48,21 @@ public class CurrencyService {
         URI uri = URI.create(API_URL);
         RequestEntity<MultiValueMap<String, String>> requestEntity = new RequestEntity<>(map, headers, HttpMethod.POST, uri);
 
-        ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
-
         try {
+            ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
             String responseBody = response.getBody();
+
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(responseBody);
 
             String baseCurrency = rootNode.get("base").asText();
-            String value = rootNode.get("rate").get(0).get("value").asText();
+            JsonNode rateNode = rootNode.get("rate").get(0);
+
+            if (rateNode == null) {
+                throw new RuntimeException("Rate data is not available in the API response");
+            }
+
+            String value = rateNode.get("value").asText();
             String time = rootNode.get("time").asText();
 
             String[] timeParts = time.split(" ")[0].split("-");
@@ -81,10 +70,32 @@ public class CurrencyService {
             String month = timeParts[1];
             String day = timeParts[2];
 
-            return "Base: " + baseCurrency + ", Value: " + value + ", Date: " + year + "-" + month + "-" + day;
+            Double rateValue = Double.parseDouble(value);
+
+            Product productDTO = new Product();
+            productDTO.setCurrency(baseCurrency);
+            productDTO.setCost(rateValue);
+            productDTO.setDate(LocalDate.parse(year + "-" + month + "-" + day));
+
+            List<Product> allProducts = productRepository.findByCurrencyOrderByDateDesc(productDTO.getCurrency());
+            Product newProduct = new Product();
+            newProduct.setDate(LocalDate.now());
+            newProduct.setCurrency(productDTO.getCurrency());
+            newProduct.setCost(productDTO.getCost());
+            newProduct.setCheaper(false);
+
+            if (!allProducts.isEmpty()) {
+                Product lastProduct = allProducts.get(allProducts.size() - 1);
+                if (productDTO.getCost() < lastProduct.getCost()) {
+                    newProduct.setCheaper(true);
+                }
+            }
+
+            return productRepository.save(newProduct);
 
         } catch (Exception e) {
-            return "Error processing the response: " + e.getMessage();
+            throw new RuntimeException("Error processing the response: " + e.getMessage(), e);
         }
     }
+
 }

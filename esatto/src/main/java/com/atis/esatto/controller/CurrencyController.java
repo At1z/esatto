@@ -26,13 +26,10 @@ public class CurrencyController {
     @Autowired
     private CurrencyService currencyService;
 
-    @PostMapping
-    public Product addProduct(@RequestBody ProductDTO productDTO) {
-        return currencyService.addProduct(productDTO);
-    }
 
     @PostMapping("/exchange-rates")
-    public String getExchangeRate(@RequestParam String base, @RequestParam String target) {
+    public Product getExchangeRate(@RequestParam String base, @RequestParam String target) {
         return currencyService.getExchangeRate(base, target);
     }
+
 }
