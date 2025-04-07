@@ -4,9 +4,11 @@ package com.atis.esatto.service;
 import com.atis.esatto.db_creation.Product;
 import com.atis.esatto.dto.ProductDTO;
 import com.atis.esatto.factory.ProductFactory;
+import com.atis.esatto.logic.PagedLogic;
 import com.atis.esatto.logic.SearchingLogic;
 import com.atis.esatto.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import com.atis.esatto.logic.SortingLogic;
 
@@ -28,6 +30,9 @@ public class ProductService {
 
     @Autowired
     private SearchingLogic searchingBy;
+
+    @Autowired
+    private PagedLogic paged;
     public Product addProduct(ProductDTO productDTO) {
         return productFactory.createProduct(productDTO);
     }
@@ -52,8 +57,11 @@ public class ProductService {
         return sortingBy.sortingBy(sortBy);
     }
 
-
     public List<Product> searchProducts(String baseCurrency, String targetCurrency, Double maxCost) {
         return searchingBy.searchingBy(baseCurrency, targetCurrency, maxCost).collect(Collectors.toList());
     }
+
+    public Page<Product> getPagedProducts(int page, int size, String baseCurrency, String targetCurrency) {
+            return paged.paged(page, size, baseCurrency, targetCurrency);
+        }
 }

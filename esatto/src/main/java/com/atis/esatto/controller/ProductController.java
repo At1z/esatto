@@ -4,6 +4,7 @@ import com.atis.esatto.db_creation.Product;
 import com.atis.esatto.service.ProductService;
 import com.atis.esatto.dto.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,4 +70,16 @@ public class ProductController {
 
         return productService.searchProducts(baseCurrency, targetCurrency, maxCost);
     }
+    @GetMapping("/paged")
+    public Page<Product> getPagedProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) String baseCurrency,
+            @RequestParam(required = false) String targetCurrency) {
+
+        return productService.getPagedProducts(page, size, baseCurrency, targetCurrency);
+    }
+
+
+
 }
