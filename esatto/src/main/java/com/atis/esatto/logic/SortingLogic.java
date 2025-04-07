@@ -1,4 +1,4 @@
-package com.atis.esatto.sorting;
+package com.atis.esatto.logic;
 
 import com.atis.esatto.db_creation.Product;
 import com.atis.esatto.repository.ProductRepository;
