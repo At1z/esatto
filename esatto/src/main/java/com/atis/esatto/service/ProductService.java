@@ -36,16 +36,38 @@ public class ProductService {
     }
     public Product updateProduct(Long id, Product updatedProduct) {
         Optional<Product> existingProduct = productRepository.findById(id);
+        List<Product> allProducts = productRepository.findByCurrencyOrderByDateDesc(updatedProduct.getCurrency());
+        System.out.println(allProducts);
+
         if (existingProduct.isPresent()) {
             Product product = existingProduct.get();
-            product.setDate(updatedProduct.getDate());
+            product.setDate(LocalDate.now());
             product.setCurrency(updatedProduct.getCurrency());
-            product.setCheaper(updatedProduct.getCheaper());
             product.setCost(updatedProduct.getCost());
+            product.setCheaper(false);
+
+            if (!allProducts.isEmpty()) {
+                Product lastProduct = allProducts.get(allProducts.size() - 1);
+
+                for (int i = allProducts.size() - 1; i >= 1; i--) {
+                    if (!allProducts.get(i).getId().equals(product.getId())) {
+                        lastProduct = allProducts.get(i);
+                        break;
+                    }
+                }
+
+                System.out.println(lastProduct.getId() + " " + product.getId());
+
+                if (updatedProduct.getCost() < lastProduct.getCost()) {
+                    product.setCheaper(true);
+                }
+            }
+
             return productRepository.save(product);
         }
         return null;
     }
+
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);

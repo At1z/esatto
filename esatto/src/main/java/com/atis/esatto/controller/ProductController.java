@@ -22,13 +22,12 @@ public class ProductController {
         return productService.addProduct(productDTO);
     }
 
-    // curl.exe -X PUT http://localhost:8080/products/1 -H "Content-Type: application/json" -d "{\"currency\":\"USD\",\"cost\":30.00,\"cheaper\":true,\"date\":\"2025-04-06\"}"
+    // curl.exe -X PUT http://localhost:8080/products/1 -H "Content-Type: application/json" -d "{\"currency\":\"USD\",\"cost\":30.00}"
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         Product updatedProduct = new Product();
-        updatedProduct.setDate(productDTO.getDate());
         updatedProduct.setCurrency(productDTO.getCurrency());
-        updatedProduct.setCheaper(productDTO.getCheaper());
+
         updatedProduct.setCost(productDTO.getCost());
 
         return productService.updateProduct(id, updatedProduct);
