@@ -21,7 +21,8 @@ public class APIService {
             APICaller.ExchangeRateResponse response = apiCaller.getExchangeRate(base, target);
 
             ProductDTO productDTO = new ProductDTO();
-            productDTO.setCurrency(response.getBaseCurrency());
+            productDTO.setBaseCurrency(response.getBaseCurrency());
+            productDTO.setTargetCurrency(target);
             productDTO.setCost(response.getRateValue());
 
             return productFactory.createProduct(productDTO);

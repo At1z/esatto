@@ -13,7 +13,7 @@ public class APIController {
     @Autowired
     private APIService apiService;
 
-
+    // curl.exe -X POST http://localhost:8080/currency/exchange-rates -H "Content-Type: application/x-www-form-urlencoded" -d "base=USD&target=PLN"
     @PostMapping("/exchange-rates")
     public Product getExchangeRate(@RequestParam String base, @RequestParam String target) {
         return apiService.getExchangeRate(base, target);

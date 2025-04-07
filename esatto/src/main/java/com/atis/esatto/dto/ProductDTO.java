@@ -4,10 +4,9 @@ import java.time.LocalDate;
 
 @Data
 public class ProductDTO {
-
     private LocalDate date;
-    private String currency;
+    private String baseCurrency;
+    private String targetCurrency;
     private Boolean cheaper;
     private Double cost;
-
 }

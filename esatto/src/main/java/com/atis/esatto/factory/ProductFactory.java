@@ -19,13 +19,14 @@ public class ProductFactory {
     public Product createProduct(ProductDTO productDTO) {
         Product newProduct = new Product();
         newProduct.setDate(LocalDate.now());
-        newProduct.setCurrency(productDTO.getCurrency());
+        newProduct.setBaseCurrency(productDTO.getBaseCurrency());
+        newProduct.setTargetCurrency(productDTO.getTargetCurrency());
         newProduct.setCost(productDTO.getCost());
         newProduct.setCheaper(false);
 
         Product savedProduct = productRepository.save(newProduct);
 
-        updateCheaperFlag(savedProduct, productDTO.getCurrency(), productDTO.getCost());
+        updateCheaperFlag(savedProduct, productDTO.getBaseCurrency(), productDTO.getCost());
 
         return savedProduct;
     }
@@ -39,35 +40,41 @@ public class ProductFactory {
 
         Product existingProduct = existingProductOpt.get();
         existingProduct.setDate(LocalDate.now());
-        existingProduct.setCurrency(updatedProduct.getCurrency());
+        existingProduct.setBaseCurrency(updatedProduct.getBaseCurrency());
+        existingProduct.setTargetCurrency(updatedProduct.getTargetCurrency());
         existingProduct.setCost(updatedProduct.getCost());
         existingProduct.setCheaper(false);
 
         Product savedProduct = productRepository.save(existingProduct);
 
-        updateCheaperFlag(savedProduct, updatedProduct.getCurrency(), updatedProduct.getCost());
+        updateCheaperFlag(savedProduct, updatedProduct.getBaseCurrency(), updatedProduct.getCost());
 
         return savedProduct;
     }
 
-    private void updateCheaperFlag(Product product, String currency, Double cost) {
-        List<Product> productsByCurrency = productRepository.findByCurrencyOrderByDateDesc(currency);
+    private void updateCheaperFlag(Product product, String baseCurrency, Double cost) {
+        List<Product> productsByCurrencyPair = productRepository.findByBaseCurrencyAndTargetCurrencyOrderByDateDesc(
+                product.getBaseCurrency(), product.getTargetCurrency());
 
-        if (productsByCurrency.size() <= 1) {
+        System.out.println(productsByCurrencyPair);
+        if (productsByCurrencyPair.size() <= 1) {
             return;
         }
 
         Product previousProduct = null;
-        for (int i = productsByCurrency.size() - 1; i >= 0; i--) {
-            if (!productsByCurrency.get(i).getId().equals(product.getId())) {
-                previousProduct = productsByCurrency.get(i);
+        for (int i = productsByCurrencyPair.size() - 1; i >= 0 ; i--) {
+            if (!productsByCurrencyPair.get(i).getId().equals(product.getId())) {
+                previousProduct = productsByCurrencyPair.get(i);
                 break;
             }
         }
+
         System.out.println(previousProduct);
-        if (previousProduct != null && cost < previousProduct.getCost()) {
-            product.setCheaper(true);
-            productRepository.save(product);
+        if (previousProduct != null) {
+            if (cost < previousProduct.getCost()) {
+                product.setCheaper(true);
+                productRepository.save(product);
+            }
         }
     }
 }
