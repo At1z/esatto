@@ -57,7 +57,6 @@ public class ProductFactory {
             return;
         }
 
-        // Znajdź poprzedni produkt (który nie jest aktualnie aktualizowanym produktem)
         Product previousProduct = null;
         for (int i = productsByCurrency.size() - 1; i >= 0; i--) {
             if (!productsByCurrency.get(i).getId().equals(product.getId())) {
@@ -66,7 +65,6 @@ public class ProductFactory {
             }
         }
         System.out.println(previousProduct);
-        // Jeśli istnieje poprzedni produkt i obecny koszt jest niższy
         if (previousProduct != null && cost < previousProduct.getCost()) {
             product.setCheaper(true);
             productRepository.save(product);
