@@ -35,6 +35,7 @@ public class APICaller {
         requestParams.add("base", base);
         requestParams.add("target", target);
 
+        System.out.println(target);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/x-www-form-urlencoded");
         headers.set("Cache-Control", "no-cache");

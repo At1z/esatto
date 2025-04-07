@@ -53,25 +53,28 @@ public class ProductFactory {
     }
 
     private void updateCheaperFlag(Product product, String baseCurrency, Double cost) {
-        // Changed to use baseCurrency instead of currency
-        List<Product> productsByCurrency = productRepository.findByBaseCurrencyOrderByDateDesc(baseCurrency);
+        List<Product> productsByCurrencyPair = productRepository.findByBaseCurrencyAndTargetCurrencyOrderByDateDesc(
+                product.getBaseCurrency(), product.getTargetCurrency());
 
-        // Rest of the method remains the same
-        if (productsByCurrency.size() <= 1) {
+        System.out.println(productsByCurrencyPair);
+        if (productsByCurrencyPair.size() <= 1) {
             return;
         }
 
         Product previousProduct = null;
-        for (int i = productsByCurrency.size() - 1; i >= 0; i--) {
-            if (!productsByCurrency.get(i).getId().equals(product.getId())) {
-                previousProduct = productsByCurrency.get(i);
+        for (int i = productsByCurrencyPair.size() - 1; i >= 0 ; i--) {
+            if (!productsByCurrencyPair.get(i).getId().equals(product.getId())) {
+                previousProduct = productsByCurrencyPair.get(i);
                 break;
             }
         }
+
         System.out.println(previousProduct);
-        if (previousProduct != null && cost < previousProduct.getCost()) {
-            product.setCheaper(true);
-            productRepository.save(product);
+        if (previousProduct != null) {
+            if (cost < previousProduct.getCost()) {
+                product.setCheaper(true);
+                productRepository.save(product);
+            }
         }
     }
 }

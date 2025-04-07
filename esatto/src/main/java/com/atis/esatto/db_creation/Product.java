@@ -15,9 +15,9 @@ public class Product {
 
     private LocalDate date;
 
-    private String baseCurrency; // Changed from currency
+    private String baseCurrency;
 
-    private String targetCurrency; // New field
+    private String targetCurrency;
 
     private Boolean cheaper;
 
