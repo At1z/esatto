@@ -50,4 +50,23 @@ public class ProductController {
     public Optional<Product> getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
+
+
+    // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=date"
+    // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=baseCurrency"
+    // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=targetCurrency"
+    @GetMapping("/sorted")
+    public List<Product> getSortedProducts(@RequestParam(defaultValue = "date") String sortBy) {
+        return productService.getSortedProducts(sortBy);
+    }
+
+    // curl.exe -X GET "http://localhost:8080/products/search?baseCurrency=USD&targetCurrency=EUR&maxCost=1.5"
+    @GetMapping("/search")
+    public List<Product> searchProducts(
+            @RequestParam(required = false) String baseCurrency,
+            @RequestParam(required = false) String targetCurrency,
+            @RequestParam(required = false) Double maxCost) {
+
+        return productService.searchProducts(baseCurrency, targetCurrency, maxCost);
+    }
 }
