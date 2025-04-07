@@ -1,0 +1,29 @@
+package com.atis.esatto.logic;
+
+import com.atis.esatto.db_creation.Product;
+import com.atis.esatto.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
+
+@Component
+public class PagedLogic {
+
+    @Autowired
+    private ProductRepository productRepository;
+    public Page<Product> paged(int page, int size, String baseCurrency, String targetCurrency){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        if (baseCurrency != null && targetCurrency != null) {
+            return productRepository.findByBaseCurrencyAndTargetCurrency(baseCurrency, targetCurrency, pageable);
+        } else if (baseCurrency != null) {
+            return productRepository.findByBaseCurrency(baseCurrency, pageable);
+        } else if (targetCurrency != null) {
+            return productRepository.findByTargetCurrency(targetCurrency, pageable);
+        } else {
+            return productRepository.findAll(pageable);
+        }
+    }
+}
