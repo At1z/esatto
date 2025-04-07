@@ -19,13 +19,14 @@ public class ProductFactory {
     public Product createProduct(ProductDTO productDTO) {
         Product newProduct = new Product();
         newProduct.setDate(LocalDate.now());
-        newProduct.setCurrency(productDTO.getCurrency());
+        newProduct.setBaseCurrency(productDTO.getBaseCurrency());
+        newProduct.setTargetCurrency(productDTO.getTargetCurrency());
         newProduct.setCost(productDTO.getCost());
         newProduct.setCheaper(false);
 
         Product savedProduct = productRepository.save(newProduct);
 
-        updateCheaperFlag(savedProduct, productDTO.getCurrency(), productDTO.getCost());
+        updateCheaperFlag(savedProduct, productDTO.getBaseCurrency(), productDTO.getCost());
 
         return savedProduct;
     }
@@ -39,20 +40,23 @@ public class ProductFactory {
 
         Product existingProduct = existingProductOpt.get();
         existingProduct.setDate(LocalDate.now());
-        existingProduct.setCurrency(updatedProduct.getCurrency());
+        existingProduct.setBaseCurrency(updatedProduct.getBaseCurrency());
+        existingProduct.setTargetCurrency(updatedProduct.getTargetCurrency());
         existingProduct.setCost(updatedProduct.getCost());
         existingProduct.setCheaper(false);
 
         Product savedProduct = productRepository.save(existingProduct);
 
-        updateCheaperFlag(savedProduct, updatedProduct.getCurrency(), updatedProduct.getCost());
+        updateCheaperFlag(savedProduct, updatedProduct.getBaseCurrency(), updatedProduct.getCost());
 
         return savedProduct;
     }
 
-    private void updateCheaperFlag(Product product, String currency, Double cost) {
-        List<Product> productsByCurrency = productRepository.findByCurrencyOrderByDateDesc(currency);
+    private void updateCheaperFlag(Product product, String baseCurrency, Double cost) {
+        // Changed to use baseCurrency instead of currency
+        List<Product> productsByCurrency = productRepository.findByBaseCurrencyOrderByDateDesc(baseCurrency);
 
+        // Rest of the method remains the same
         if (productsByCurrency.size() <= 1) {
             return;
         }

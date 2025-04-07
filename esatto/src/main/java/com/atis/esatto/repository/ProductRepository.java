@@ -6,5 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+// ProductRepository.java
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByCurrencyOrderByDateDesc(String currency);}
+    // Changed method to use baseCurrency instead of currency
+    List<Product> findByBaseCurrencyOrderByDateDesc(String baseCurrency);
+}
