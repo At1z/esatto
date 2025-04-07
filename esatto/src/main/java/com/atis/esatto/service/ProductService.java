@@ -1,13 +1,14 @@
 package com.atis.esatto.service;
 
+
 import com.atis.esatto.db_creation.Product;
 import com.atis.esatto.dto.ProductDTO;
 import com.atis.esatto.factory.ProductFactory;
 import com.atis.esatto.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.atis.esatto.sorting.SortingLogic;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,9 @@ public class ProductService {
 
     @Autowired
     private ProductFactory productFactory;
+
+    @Autowired
+    private SortingLogic sortingBy;
 
     public Product addProduct(ProductDTO productDTO) {
         return productFactory.createProduct(productDTO);
@@ -41,22 +45,8 @@ public class ProductService {
     }
 
     public List<Product> getSortedProducts(String sortBy) {
-        List<Product> allProducts = productRepository.findAll();
+        List<Product> allProducts = sortingBy.sortingBy(sortBy);
 
-        switch (sortBy.toLowerCase()) {
-            case "date":
-                allProducts.sort(Comparator.comparing(Product::getDate));
-                break;
-            case "basecurrency":
-                allProducts.sort(Comparator.comparing(Product::getBaseCurrency));
-                break;
-            case "targetcurrency":
-                allProducts.sort(Comparator.comparing(Product::getTargetCurrency));
-                break;
-            default:
-                // Default to date sorting
-                allProducts.sort(Comparator.comparing(Product::getDate));
-        }
 
         return allProducts;
     }

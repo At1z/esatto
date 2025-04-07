@@ -51,7 +51,7 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    // New endpoint for sorted products
+
     // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=date"
     // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=baseCurrency"
     // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=targetCurrency"
