@@ -50,4 +50,13 @@ public class ProductController {
     public Optional<Product> getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
+
+    // New endpoint for sorted products
+    // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=date"
+    // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=baseCurrency"
+    // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=targetCurrency"
+    @GetMapping("/sorted")
+    public List<Product> getSortedProducts(@RequestParam(defaultValue = "date") String sortBy) {
+        return productService.getSortedProducts(sortBy);
+    }
 }

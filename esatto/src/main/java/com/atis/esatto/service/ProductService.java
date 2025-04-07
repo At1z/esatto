@@ -7,6 +7,7 @@ import com.atis.esatto.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,5 +38,26 @@ public class ProductService {
 
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
+    }
+
+    public List<Product> getSortedProducts(String sortBy) {
+        List<Product> allProducts = productRepository.findAll();
+
+        switch (sortBy.toLowerCase()) {
+            case "date":
+                allProducts.sort(Comparator.comparing(Product::getDate));
+                break;
+            case "basecurrency":
+                allProducts.sort(Comparator.comparing(Product::getBaseCurrency));
+                break;
+            case "targetcurrency":
+                allProducts.sort(Comparator.comparing(Product::getTargetCurrency));
+                break;
+            default:
+                // Default to date sorting
+                allProducts.sort(Comparator.comparing(Product::getDate));
+        }
+
+        return allProducts;
     }
 }
