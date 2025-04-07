@@ -16,7 +16,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // curl.exe -X POST http://localhost:8080/products -H "Content-Type: application/json" -d "{\"currency\":\"BSD\",\"cost\":25.25}"
+    // curl.exe -X POST http://localhost:8080/products -H "Content-Type: application/json" -d "{\"currency\":\"USD\",\"cost\":25.25}"
     @PostMapping
     public Product addProduct(@RequestBody ProductDTO productDTO) {
         return productService.addProduct(productDTO);
