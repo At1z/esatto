@@ -83,33 +83,58 @@ function ProductForm({ formData, setFormData, onSubmit, currentProduct }) {
   );
 }
 
-// Product List Component
 function ProductList({ products, paginationInfo }) {
   if (!products || products.length === 0) {
     return <div>No products found</div>;
   }
 
   return (
-    <div style={{ padding: "10px", textAlign: "left" }}>
-      <h3 style={{ marginTop: 0 }}>Products ({products.length})</h3>
-      <div style={{ fontSize: "0.9em" }}>
-        {products.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              marginBottom: "4px",
-              borderBottom: "1px solid #ddd",
-              paddingBottom: "3px",
-            }}
-          >
-            ID: {item.id} | {item.baseCurrency} → {item.targetCurrency} | Cost:{" "}
-            {item.cost}
-          </div>
-        ))}
-      </div>
+    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+      <h2 style={{ marginTop: 0, marginBottom: "15px" }}>
+        Products ({products.length})
+      </h2>
+
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          fontSize: "1rem",
+        }}
+      >
+        <thead>
+          <tr style={{ backgroundColor: "#f5f5f5" }}>
+            <th style={thStyle}>ID</th>
+            <th style={thStyle}>Base Currency</th>
+            <th style={thStyle}>Target Currency</th>
+            <th style={thStyle}>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((item, index) => (
+            <tr
+              key={item.id}
+              style={{
+                backgroundColor: index % 2 === 0 ? "#ffffff" : "#c9c9c9",
+              }}
+            >
+              <td style={tdStyle}>{item.id}</td>
+              <td style={tdStyle}>{item.baseCurrency}</td>
+              <td style={tdStyle}>{item.targetCurrency}</td>
+              <td style={tdStyle}>{item.cost}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       {paginationInfo && (
-        <div style={{ marginTop: "10px", textAlign: "center" }}>
+        <div
+          style={{
+            marginTop: "15px",
+            textAlign: "center",
+            fontSize: "0.95rem",
+            color: "#555",
+          }}
+        >
           Page {paginationInfo.number + 1} of {paginationInfo.totalPages} |
           Total items: {paginationInfo.totalElements}
         </div>
@@ -118,7 +143,17 @@ function ProductList({ products, paginationInfo }) {
   );
 }
 
-// Product Detail Component
+const thStyle = {
+  borderBottom: "2px solid #ccc",
+  padding: "10px",
+  textAlign: "center",
+};
+
+const tdStyle = {
+  padding: "8px 10px",
+  borderBottom: "1px solid #eee",
+};
+
 function ProductDetail({ product }) {
   return (
     <div style={{ padding: "10px", textAlign: "left" }}>
@@ -142,7 +177,7 @@ function MainPage() {
     targetCurrency: "",
     cost: "",
     page: "0",
-    size: "5",
+    size: "",
   };
 
   const [formData, setFormData] = useState(initialFormState);
