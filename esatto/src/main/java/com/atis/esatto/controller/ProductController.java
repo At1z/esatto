@@ -1,12 +1,14 @@
 package com.atis.esatto.controller;
 
 import com.atis.esatto.db_creation.Product;
+import com.atis.esatto.exceptions.ProductNotFoundException;
 import com.atis.esatto.service.ProductService;
 import com.atis.esatto.dto.ProductDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,9 +56,12 @@ public class ProductController {
 
     // curl.exe -X GET http://localhost:8080/products/1
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
-        return productService.getProductById(id).orElseThrow(RuntimeException::new);
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Product product = productService.getProductById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
+        return ResponseEntity.ok(product);
     }
+
 
 
     // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=date"
