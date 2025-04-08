@@ -54,11 +54,13 @@ public class ProductService {
     }
 
     public List<Product> getSortedProducts(String sortBy) {
-        return sortingBy.sortingBy(sortBy);
+        List<Product> allProducts = productRepository.findAll();
+        return sortingBy.sortingBy(sortBy, allProducts);
     }
 
     public List<Product> searchProducts(String baseCurrency, String targetCurrency, Double maxCost) {
-        return searchingBy.searchingBy(baseCurrency, targetCurrency, maxCost).collect(Collectors.toList());
+        List<Product> allProducts = productRepository.findAll();
+        return searchingBy.searchingBy(baseCurrency, targetCurrency, maxCost, allProducts).collect(Collectors.toList());
     }
 
     public Page<Product> getPagedProducts(int page, int size, String baseCurrency, String targetCurrency) {

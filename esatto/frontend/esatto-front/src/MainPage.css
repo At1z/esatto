@@ -1,0 +1,64 @@
+:root {
+  background-color: #dadfdc;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.Header {
+  text-align: center;
+  margin-bottom: 100px;
+}
+.Columns {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 25px;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 100px;
+}
+
+.MiddleColumn {
+  width: 600px;
+  height: 300px;
+}
+
+.MainPanel {
+  background-color: #ffffff;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.FieldHolder {
+  background-color: #979797;
+  width: 100%;
+  height: 50px;
+  text-align: center;
+
+  border-radius: 10px;
+}
+
+.LeftColumn {
+  width: 200px;
+  height: 300px;
+  text-align: center;
+  background-color: #979797;
+  border-radius: 10px;
+}
+
+.RightColumn {
+  width: 200px;
+  height: 300px;
+  text-align: center;
+  background-color: #979797;
+  border-radius: 10px;
+}
