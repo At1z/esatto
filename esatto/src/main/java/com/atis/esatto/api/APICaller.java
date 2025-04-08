@@ -1,5 +1,6 @@
 package com.atis.esatto.api;
 
+import com.atis.esatto.exceptions.RateNodeInvalidRuntimeException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,7 +56,7 @@ public class APICaller {
             JsonNode rateNode = rootNode.get("rate").get(0);
 
             if (rateNode == null) {
-                throw new RuntimeException("Rate data is not available in the API response");
+                throw new RateNodeInvalidRuntimeException("Rate data is not available in the API response");
             }
 
             String value = rateNode.get("value").asText();
@@ -68,21 +69,7 @@ public class APICaller {
         }
     }
 
-    public static class ExchangeRateResponse {
-        private final String baseCurrency;
-        private final Double rateValue;
-
-        public ExchangeRateResponse(String baseCurrency, Double rateValue) {
-            this.baseCurrency = baseCurrency;
-            this.rateValue = rateValue;
-        }
-
-        public String getBaseCurrency() {
-            return baseCurrency;
-        }
-
-        public Double getRateValue() {
-            return rateValue;
-        }
+    public record ExchangeRateResponse(String baseCurrency, Double rateValue) {
     }
+
 }

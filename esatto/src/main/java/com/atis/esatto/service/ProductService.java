@@ -7,38 +7,77 @@ import com.atis.esatto.factory.ProductFactory;
 import com.atis.esatto.logic.PagedLogic;
 import com.atis.esatto.logic.SearchingLogic;
 import com.atis.esatto.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import com.atis.esatto.logic.SortingLogic;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
 
-    @Autowired
-    private ProductFactory productFactory;
+    private final ProductRepository productRepository;
+    private final ProductFactory productFactory;
+    private final SortingLogic sortingBy;
+    private final SearchingLogic searchingBy;
+    private final PagedLogic paged;
 
-    @Autowired
-    private SortingLogic sortingBy;
-
-    @Autowired
-    private SearchingLogic searchingBy;
-
-    @Autowired
-    private PagedLogic paged;
     public Product addProduct(ProductDTO productDTO) {
-        return productFactory.createProduct(productDTO);
+        Product savedProduct = productFactory.createProduct(productDTO, productRepository);
+        updateCheaperFlag(savedProduct, productDTO.getCost());
+        return savedProduct;
     }
 
     public Product updateProduct(Long id, Product updatedProduct) {
-        return productFactory.updateExistingProduct(id, updatedProduct);
+        Optional<Product> existingProductOpt = productRepository.findById(id);
+
+        if (existingProductOpt.isEmpty()) {
+            return null;
+        }
+
+        Product existingProduct = existingProductOpt.get();
+        existingProduct.setDate(LocalDateTime.now());
+        existingProduct.setBaseCurrency(updatedProduct.getBaseCurrency());
+        existingProduct.setTargetCurrency(updatedProduct.getTargetCurrency());
+        existingProduct.setCost(updatedProduct.getCost());
+        existingProduct.setCheaper(false);
+
+        Product savedProduct = productRepository.save(existingProduct);
+
+        updateCheaperFlag(savedProduct, updatedProduct.getCost());
+
+        return savedProduct;
+    }
+
+    private void updateCheaperFlag(Product product, Double cost) {
+        List<Product> productsByCurrencyPair = productRepository.findByBaseCurrencyAndTargetCurrencyOrderByDateDesc(
+                product.getBaseCurrency(), product.getTargetCurrency());
+
+        System.out.println(productsByCurrencyPair);
+        if (productsByCurrencyPair.size() <= 1) {
+            return;
+        }
+
+        Product previousProduct = null;
+        for (int i = 0; i < productsByCurrencyPair.size() ; i++) {
+            if (!productsByCurrencyPair.get(i).getId().equals(product.getId())) {
+                previousProduct = productsByCurrencyPair.get(i);
+                break;
+            }
+        }
+
+        System.out.println(previousProduct);
+        if (previousProduct != null) {
+            if (cost < previousProduct.getCost()) {
+                product.setCheaper(true);
+                productRepository.save(product);
+            }
+        }
     }
 
     public void deleteProduct(Long id) {
@@ -64,6 +103,6 @@ public class ProductService {
     }
 
     public Page<Product> getPagedProducts(int page, int size, String baseCurrency, String targetCurrency) {
-            return paged.paged(page, size, baseCurrency, targetCurrency);
-        }
+        return paged.paged(page, size, baseCurrency, targetCurrency, productRepository);
+    }
 }
