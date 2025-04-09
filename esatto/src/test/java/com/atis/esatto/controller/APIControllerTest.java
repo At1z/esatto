@@ -7,11 +7,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 
@@ -55,5 +54,42 @@ class APIControllerTest {
         // Then
         assertEquals("PLN", result.getBaseCurrency());
         assertEquals("USD", result.getTargetCurrency());
+    }
+
+    @Test
+    void getExchangeRate_ShouldCallServiceOnce() {
+        // Given
+        Product expected = new Product();
+        when(apiService.getExchangeRate(anyString(), anyString())).thenReturn(expected);
+
+        // When
+        apiController.getExchangeRate("USD", "PLN");
+
+        // Then
+        verify(apiService, times(1)).getExchangeRate("USD", "PLN");
+    }
+
+    @Test
+    void getExchangeRate_WithNullParameters_ShouldThrowException() {
+        // Given
+        when(apiService.getExchangeRate(null, null)).thenThrow(new IllegalArgumentException());
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            apiController.getExchangeRate(null, null);
+        });
+    }
+
+    @Test
+    void getExchangeRate_WithEmptyCurrency_ShouldReturnProduct() {
+        // Given
+        Product expected = new Product();
+        when(apiService.getExchangeRate("", "")).thenReturn(expected);
+
+        // When
+        Product result = apiController.getExchangeRate("", "");
+
+        // Then
+        assertNotNull(result);
     }
 }
