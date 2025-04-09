@@ -14,6 +14,8 @@ function MainPage() {
     paginationInfo,
     displayMode,
     loading,
+    disabledFields,
+    activeOperation,
     handleSubmit,
     handleAdd,
     handleDelete,
@@ -59,6 +61,8 @@ function MainPage() {
               setFormData={setFormData}
               onSubmit={handleSubmit}
               currentProduct={currentProduct}
+              disabledFields={disabledFields}
+              activeOperation={activeOperation}
             />
           </div>
         </div>
