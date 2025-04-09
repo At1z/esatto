@@ -15,6 +15,12 @@ function ProductDetail({ product }) {
       </p>
       <p style={{ margin: "5px 0" }}>Cost: {product.cost}</p>
       <p style={{ margin: "5px 0" }}>Date: {product.date || "N/A"}</p>
+      {/* Display the cheaper property if it exists */}
+      {product.cheaper !== undefined && (
+        <p style={{ margin: "5px 0" }}>
+          Cheaper: {product.cheaper ? "Yes" : "No"}
+        </p>
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { productService } from "../services/productService";
+import { productService, currencyService } from "../services/productService";
 
 function useProductManagement() {
   const initialFormState = {
@@ -108,6 +108,28 @@ function useProductManagement() {
         case "page":
           executePaging();
           return;
+        case "external": {
+          const exchangeData = await currencyService.getExchangeRate({
+            baseCurrency: formData.baseCurrency,
+            targetCurrency: formData.targetCurrency,
+          });
+
+          if (exchangeData) {
+            const formattedData = Array.isArray(exchangeData)
+              ? exchangeData
+              : [exchangeData].map((item) => ({
+                  id: item.id || "external-" + Date.now(),
+                  baseCurrency: item.baseCurrency || formData.baseCurrency,
+                  targetCurrency:
+                    item.targetCurrency || formData.targetCurrency,
+                  cost: item.rate || item.cost || 0,
+                  date: item.date || new Date().toISOString().split("T")[0],
+                }));
+
+            setProducts(formattedData);
+            setDisplayMode("list");
+          }
+        }
       }
 
       fetchAllProducts();
@@ -133,6 +155,22 @@ function useProductManagement() {
       size: true,
     });
     setActiveOperation("add");
+    setFormData({
+      ...initialFormState,
+      id: "",
+    });
+  };
+
+  const handleExternalSource = () => {
+    setDisabledFields({
+      id: true,
+      baseCurrency: false,
+      targetCurrency: false,
+      cost: true,
+      page: true,
+      size: true,
+    });
+    setActiveOperation("external");
     setFormData({
       ...initialFormState,
       id: "",
@@ -243,7 +281,6 @@ function useProductManagement() {
     });
     setActiveOperation("search");
 
-    // Wykonaj wyszukiwanie od razu, jeśli pola są wypełnione
     if (formData.baseCurrency || formData.targetCurrency || formData.cost) {
       executeSearch();
     }
@@ -281,7 +318,6 @@ function useProductManagement() {
     });
     setActiveOperation("page");
 
-    // Wykonaj paginację od razu z domyślnymi wartościami
     executePaging();
   };
 
@@ -329,6 +365,7 @@ function useProductManagement() {
     handleSearch,
     handlePage,
     fetchAllProducts,
+    handleExternalSource,
   };
 }
 

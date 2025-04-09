@@ -130,11 +130,11 @@ export const productService = {
 
 // Currency exchange endpoint
 export const currencyService = {
-  getExchangeRate: async (base, target) => {
+  getExchangeRate: async (params) => {
     try {
       const formData = new URLSearchParams();
-      formData.append("base", base);
-      formData.append("target", target);
+      formData.append("base", params.baseCurrency);
+      formData.append("target", params.targetCurrency);
 
       const response = await fetch(`${API_BASE_URL}/currency/exchange-rates`, {
         method: "POST",
@@ -143,7 +143,9 @@ export const currencyService = {
         },
         body: formData,
       });
-      return await response.json();
+      const data = await response.json();
+      console.log("Exchange Rate API Response:", data);
+      return await data;
     } catch (error) {
       console.error("Error fetching exchange rate:", error);
       throw error;

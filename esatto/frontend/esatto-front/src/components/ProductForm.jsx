@@ -4,7 +4,6 @@ function ProductForm({
   formData,
   setFormData,
   onSubmit,
-  currentProduct,
   disabledFields,
   activeOperation,
 }) {
@@ -32,6 +31,8 @@ function ProductForm({
         return "Search Products";
       case "page":
         return "Get Page";
+      case "external":
+        return "Get External Soure";
       default:
         return "Submit";
     }

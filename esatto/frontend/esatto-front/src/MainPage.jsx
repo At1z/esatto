@@ -25,6 +25,7 @@ function MainPage() {
     handleSearch,
     handlePage,
     fetchAllProducts,
+    handleExternalSource,
   } = useProductManagement();
 
   return (
@@ -36,6 +37,7 @@ function MainPage() {
           <button onClick={handleDelete}>Delete</button>
           <button onClick={handleUpdate}>Update</button>
           <button onClick={fetchAllProducts}>Show All</button>
+          <button onClick={handleExternalSource}>External Source</button>
         </div>
 
         <div className="MiddleColumn">

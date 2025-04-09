@@ -16,6 +16,11 @@ function ProductList({ products, paginationInfo }) {
     return <div>No products found</div>;
   }
 
+  // Check if any product has the 'cheaper' property
+  const hasCheeperProperty = products.some(
+    (item) => item.cheaper !== undefined
+  );
+
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <h2 style={{ marginTop: 0, marginBottom: "15px" }}>
@@ -35,6 +40,8 @@ function ProductList({ products, paginationInfo }) {
             <th style={thStyle}>Base Currency</th>
             <th style={thStyle}>Target Currency</th>
             <th style={thStyle}>Cost</th>
+            <th style={thStyle}>Date</th>
+            {hasCheeperProperty && <th style={thStyle}>Cheaper</th>}
           </tr>
         </thead>
         <tbody>
@@ -49,6 +56,10 @@ function ProductList({ products, paginationInfo }) {
               <td style={tdStyle}>{item.baseCurrency}</td>
               <td style={tdStyle}>{item.targetCurrency}</td>
               <td style={tdStyle}>{item.cost}</td>
+              {hasCheeperProperty && (
+                <td style={tdStyle}>{item.cheaper ? "Yes" : "No"}</td>
+              )}
+              <td style={tdStyle}>{item.date}</td>
             </tr>
           ))}
         </tbody>
