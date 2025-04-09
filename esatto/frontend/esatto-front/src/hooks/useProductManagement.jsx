@@ -30,6 +30,7 @@ function useProductManagement() {
   // Initialize by fetching all products
   useEffect(() => {
     fetchAllProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchAllProducts = async () => {
