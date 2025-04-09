@@ -1,5 +1,6 @@
 package com.atis.esatto.exceptions;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,4 +43,13 @@ public class GlobalExceptionsHandler {
                 .body("{\"message\": \"" + ex.getMessage() + "\"}");
     }
 
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<String> handleDataAccessException(DataAccessException ex) {
+        return ResponseEntity.status(500).body("Database error: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception ex) {
+        return ResponseEntity.status(500).body("Unexpected error: " + ex.getMessage());
+    }
 }

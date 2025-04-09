@@ -44,8 +44,10 @@ public class ProductController {
 
     // curl.exe -X DELETE http://localhost:8080/products/1
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     // curl.exe -X GET http://localhost:8080/products
