@@ -3,6 +3,7 @@ package com.atis.esatto.service;
 
 import com.atis.esatto.db_creation.Product;
 import com.atis.esatto.dto.ProductDTO;
+import com.atis.esatto.exceptions.ProductNotFoundException;
 import com.atis.esatto.factory.ProductFactory;
 import com.atis.esatto.logic.PagedLogic;
 import com.atis.esatto.logic.SearchingLogic;
@@ -37,7 +38,7 @@ public class ProductService {
         Optional<Product> existingProductOpt = productRepository.findById(id);
 
         if (existingProductOpt.isEmpty()) {
-            return null;
+            throw new ProductNotFoundException("Product not found with id: " + id);
         }
 
         Product existingProduct = existingProductOpt.get();
@@ -81,6 +82,9 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new ProductNotFoundException("Product not found with id: " + id);
+        }
         productRepository.deleteById(id);
     }
 
