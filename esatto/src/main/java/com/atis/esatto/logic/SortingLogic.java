@@ -1,8 +1,6 @@
 package com.atis.esatto.logic;
 
 import com.atis.esatto.db_creation.Product;
-import com.atis.esatto.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -11,11 +9,9 @@ import java.util.List;
 @Component
 public class SortingLogic {
 
-    @Autowired
-    private ProductRepository productRepository;
 
-    public List<Product> sortingBy(String sortBy) {
-        List<Product> allProducts = productRepository.findAll();
+    public List<Product> sortingBy(String sortBy, List<Product> allProducts) {
+
 
         switch (sortBy.toLowerCase()) {
             case "date":

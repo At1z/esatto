@@ -1,25 +1,33 @@
 package com.atis.esatto.controller;
 
 import com.atis.esatto.db_creation.Product;
+import com.atis.esatto.exceptions.ProductNotFoundException;
 import com.atis.esatto.service.ProductService;
 import com.atis.esatto.dto.ProductDTO;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
+@Validated
 @RestController
 @RequestMapping("/products")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+
+    private final ProductService productService;
 
     // curl.exe -X POST http://localhost:8080/products -H "Content-Type: application/json" -d "{\"baseCurrency\":\"USD\",\"targetCurrency\":\"EUR\",\"cost\":25.25}"
     @PostMapping
-    public Product addProduct(@RequestBody ProductDTO productDTO) {
+    public Product addProduct(@RequestBody @Valid ProductDTO productDTO) {
         return productService.addProduct(productDTO);
     }
 
@@ -48,9 +56,12 @@ public class ProductController {
 
     // curl.exe -X GET http://localhost:8080/products/1
     @GetMapping("/{id}")
-    public Optional<Product> getProductById(@PathVariable Long id) {
-        return productService.getProductById(id);
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Product product = productService.getProductById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
+        return ResponseEntity.ok(product);
     }
+
 
 
     // curl.exe -X GET "http://localhost:8080/products/sorted?sortBy=date"
@@ -70,6 +81,7 @@ public class ProductController {
 
         return productService.searchProducts(baseCurrency, targetCurrency, maxCost);
     }
+
     @GetMapping("/paged")
     public Page<Product> getPagedProducts(
             @RequestParam(defaultValue = "0") int page,

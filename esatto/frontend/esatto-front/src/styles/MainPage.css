@@ -1,0 +1,123 @@
+:root {
+  background-color: #222222;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.Header {
+  text-align: center;
+  margin-left: 25px;
+  margin-bottom: 40px;
+  font-size: 3em;
+  font-family: "Arial", sans-serif;
+  font-weight: bold;
+  color: #05df29;
+  letter-spacing: 2px;
+}
+
+.Columns {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 100px;
+}
+
+.MiddleColumn {
+  width: 700px;
+  height: 350px;
+}
+
+.MainPanel {
+  background-color: #ececec;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+  border: 2px solid #645e5e;
+  border-radius: 8px;
+}
+
+.FieldHolder {
+  padding: 20px;
+  border: 2px solid #645e5e;
+  border-radius: 8px;
+  background-color: #ececec;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input {
+  width: 95%;
+  padding: 7px;
+  border-radius: 4px;
+  border: 1px solid #645e5e;
+  font-size: 14px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #05df29;
+  color: white;
+  border: 6455ee;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #01a01c;
+}
+
+.LeftColumn {
+  width: 200px;
+  height: 330px;
+  background-color: #ececec;
+  border: 2px solid #645e5e;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.RightColumn {
+  width: 200px;
+  height: 330px;
+  background-color: #ececec;
+  border: 2px solid #645e5e;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+  background-color: #05df29;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #45a049;
+}

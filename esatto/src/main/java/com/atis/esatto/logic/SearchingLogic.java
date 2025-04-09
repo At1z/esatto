@@ -1,8 +1,6 @@
 package com.atis.esatto.logic;
 
 import com.atis.esatto.db_creation.Product;
-import com.atis.esatto.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,11 +8,9 @@ import java.util.stream.Stream;
 
 @Component
 public class SearchingLogic {
-    @Autowired
-    private ProductRepository productRepository;
 
-    public Stream<Product> searchingBy(String baseCurrency, String targetCurrency, Double maxCost){
-        List<Product> allProducts = productRepository.findAll();
+
+    public Stream<Product> searchingBy(String baseCurrency, String targetCurrency, Double maxCost, List<Product> allProducts){
 
         Stream<Product> productStream = allProducts.stream();
 
