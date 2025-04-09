@@ -21,8 +21,8 @@ function ProductList({ products, paginationInfo }) {
             <th className="product-th">Base Currency</th>
             <th className="product-th">Target Currency</th>
             <th className="product-th">Cost</th>
-            <th className="product-th">Date</th>
             {hasCheeperProperty && <th className="product-th">Cheaper</th>}
+            <th className="product-th">Date</th>
           </tr>
         </thead>
         <tbody>
@@ -32,10 +32,10 @@ function ProductList({ products, paginationInfo }) {
               <td className="product-td">{item.baseCurrency}</td>
               <td className="product-td">{item.targetCurrency}</td>
               <td className="product-td">{item.cost}</td>
-              <td className="product-td">{item.date}</td>
               {hasCheeperProperty && (
                 <td className="product-td">{item.cheaper ? "Yes" : "No"}</td>
               )}
+              <td className="product-td">{item.date}</td>
             </tr>
           ))}
         </tbody>

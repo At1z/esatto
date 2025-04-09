@@ -61,6 +61,8 @@ function ProductForm({
           type="text"
           id="baseCurrency"
           name="baseCurrency"
+          pattern="[A-Z]{3}"
+          title="Must be 3 uppercase letters (e.g., USD)"
           value={formData.baseCurrency}
           onChange={handleInputChange}
           disabled={disabledFields.baseCurrency}
@@ -75,6 +77,8 @@ function ProductForm({
           type="text"
           id="targetCurrency"
           name="targetCurrency"
+          pattern="[A-Z]{3}"
+          title="Must be 3 uppercase letters (e.g., USD)"
           value={formData.targetCurrency}
           onChange={handleInputChange}
           disabled={disabledFields.targetCurrency}
@@ -89,7 +93,7 @@ function ProductForm({
           type="number"
           id="cost"
           name="cost"
-          min="0"
+          min="0.01"
           step="0.01"
           value={formData.cost}
           onChange={handleInputChange}

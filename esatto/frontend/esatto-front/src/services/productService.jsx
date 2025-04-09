@@ -60,10 +60,21 @@ export const productService = {
   },
 
   // Get product by ID
+  // W pliku productService.jsx zaktualizuj funkcję getProductById:
   getProductById: async (id) => {
     try {
       const response = await fetch(`${API_BASE_URL}/products/${id}`);
-      return await response.json();
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.log(`[404] Product with ID ${id} not found`);
+          return null;
+        }
+        console.log(`[${response.status}] Error fetching product by ID`);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(`Successfully fetched product with ID ${id}:`, data);
+      return data;
     } catch (error) {
       console.error("Error fetching product by ID:", error);
       throw error;
