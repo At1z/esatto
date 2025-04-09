@@ -98,15 +98,15 @@ function useProductManagement() {
           break;
 
         case "getById":
-          // This is handled by handleGetById
+          handleGetById();
           return;
 
         case "search":
-          // This is handled by handleSearch
+          executeSearch();
           return;
 
         case "page":
-          // This is handled by handlePage
+          executePaging();
           return;
       }
 
@@ -185,29 +185,30 @@ function useProductManagement() {
       return;
     }
 
+    executeGetById();
+  };
+
+  const executeGetById = async () => {
     setLoading(true);
-    productService
-      .getProductById(formData.id)
-      .then((product) => {
-        if (product) {
-          setCurrentProduct(product);
-          setFormData({
-            id: product.id.toString(),
-            baseCurrency: product.baseCurrency,
-            targetCurrency: product.targetCurrency,
-            cost: product.cost.toString(),
-            page: formData.page,
-            size: formData.size,
-          });
-          setDisplayMode("detail");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching product:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const product = await productService.getProductById(formData.id);
+      if (product) {
+        setCurrentProduct(product);
+        setFormData({
+          id: product.id.toString(),
+          baseCurrency: product.baseCurrency,
+          targetCurrency: product.targetCurrency,
+          cost: product.cost.toString(),
+          page: formData.page,
+          size: formData.size,
+        });
+        setDisplayMode("detail");
+      }
+    } catch (error) {
+      console.error("Error fetching product:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSort = async () => {
@@ -242,28 +243,30 @@ function useProductManagement() {
     });
     setActiveOperation("search");
 
-    if (activeOperation === "search") {
-      setLoading(true);
-      try {
-        const searchParams = {
-          baseCurrency: formData.baseCurrency || null,
-          targetCurrency: formData.targetCurrency || null,
-          maxCost: formData.cost ? parseFloat(formData.cost) : null,
-        };
+    // Wykonaj wyszukiwanie od razu, jeśli pola są wypełnione
+    if (formData.baseCurrency || formData.targetCurrency || formData.cost) {
+      executeSearch();
+    }
+  };
 
-        productService
-          .searchProducts(searchParams)
-          .then((filteredProducts) => {
-            setProducts(filteredProducts);
-            setDisplayMode("list");
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } catch (error) {
-        console.error("Error searching products:", error);
-        setLoading(false);
-      }
+  const executeSearch = async () => {
+    setLoading(true);
+    try {
+      const searchParams = {
+        baseCurrency: formData.baseCurrency || null,
+        targetCurrency: formData.targetCurrency || null,
+        maxCost: formData.cost ? parseFloat(formData.cost) : null,
+      };
+
+      const filteredProducts = await productService.searchProducts(
+        searchParams
+      );
+      setProducts(filteredProducts);
+      setDisplayMode("list");
+    } catch (error) {
+      console.error("Error searching products:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -278,33 +281,32 @@ function useProductManagement() {
     });
     setActiveOperation("page");
 
-    if (activeOperation === "page") {
-      setLoading(true);
-      try {
-        const page = parseInt(formData.page) || 0;
-        const size = parseInt(formData.size) || 5;
+    // Wykonaj paginację od razu z domyślnymi wartościami
+    executePaging();
+  };
 
-        productService
-          .getPagedProducts(
-            page,
-            size,
-            formData.baseCurrency || null,
-            formData.targetCurrency || null
-          )
-          .then((pagedData) => {
-            if (pagedData && pagedData.content) {
-              setProducts(pagedData.content);
-              setPaginationInfo(pagedData);
-              setDisplayMode("list");
-            }
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } catch (error) {
-        console.error("Error fetching paged products:", error);
-        setLoading(false);
+  const executePaging = async () => {
+    setLoading(true);
+    try {
+      const page = parseInt(formData.page) || 0;
+      const size = parseInt(formData.size) || 5;
+
+      const pagedData = await productService.getPagedProducts(
+        page,
+        size,
+        formData.baseCurrency || null,
+        formData.targetCurrency || null
+      );
+
+      if (pagedData && pagedData.content) {
+        setProducts(pagedData.content);
+        setPaginationInfo(pagedData);
+        setDisplayMode("list");
       }
+    } catch (error) {
+      console.error("Error fetching paged products:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
