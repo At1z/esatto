@@ -30,16 +30,36 @@ function useProductOperations({
       return;
     }
 
+    // Additional client-side validation
+    if (!/^\d+$/.test(formData.id)) {
+      alert("ID must be a numeric value");
+      return;
+    }
+
     setLoading(true);
     try {
       const product = await productService.getProductById(formData.id);
-      if (product) {
-        setCurrentProduct(product);
-        setDisplayMode("detail");
+
+      if (product === null) {
+        alert(`Product with ID ${formData.id} was not found.`);
+        setDisplayMode("list");
+        setCurrentProduct(null);
+        return;
       }
+
+      setCurrentProduct(product);
+      setDisplayMode("detail");
     } catch (error) {
-      console.error("Error fetching product:", error);
-      alert("Error: Could not find product with ID " + formData.id);
+      console.error(`Error fetching product:`, error);
+
+      let errorMessage = `Could not retrieve product with ID ${formData.id}`;
+      if (error.message.includes("NetworkError")) {
+        errorMessage = "Network error - please check your connection";
+      }
+
+      alert(errorMessage);
+      setDisplayMode("list");
+      setCurrentProduct(null);
     } finally {
       setLoading(false);
     }

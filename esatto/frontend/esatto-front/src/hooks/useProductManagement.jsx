@@ -79,35 +79,116 @@ function useProductManagement() {
 
     try {
       switch (activeOperation) {
-        case "add":
+        case "add": {
+          const currencyRegex = /^[A-Z]{3}$/;
+          if (!currencyRegex.test(formData.baseCurrency)) {
+            alert("Base Currency must be 3 uppercase letters (e.g., USD, EUR)");
+            return;
+          }
+          if (!currencyRegex.test(formData.targetCurrency)) {
+            alert(
+              "Target Currency must be 3 uppercase letters (e.g., USD, EUR)"
+            );
+            return;
+          }
+          if (formData.baseCurrency === formData.targetCurrency) {
+            alert("Base Currency and Target Currency cannot be the same");
+            return;
+          }
+          if (!formData.cost || isNaN(parseFloat(formData.cost))) {
+            alert("Cost must be a valid number");
+            return;
+          }
           await productService.addProduct({
             baseCurrency: formData.baseCurrency,
             targetCurrency: formData.targetCurrency,
             cost: parseFloat(formData.cost),
           });
           break;
+        }
 
-        case "update":
-          if (!formData.id) {
-            alert("ID is required for update operation");
+        case "update": {
+          if (
+            !formData.id ||
+            !/^\d+$/.test(formData.id) ||
+            parseInt(formData.id) <= 0
+          ) {
+            alert("ID must be a positive number");
             return;
           }
-          await productService.updateProduct(formData.id, {
-            baseCurrency: formData.baseCurrency,
-            targetCurrency: formData.targetCurrency,
-            cost: parseFloat(formData.cost),
-          });
-          break;
-
-        case "delete":
-          if (!formData.id) {
-            alert("ID is required for delete operation");
+          const currencyRegex = /^[A-Z]{3}$/;
+          if (!currencyRegex.test(formData.baseCurrency)) {
+            alert("Base Currency must be 3 uppercase letters (e.g., USD, EUR)");
             return;
           }
-          await productService.deleteProduct(formData.id);
-          break;
+          if (!currencyRegex.test(formData.targetCurrency)) {
+            alert(
+              "Target Currency must be 3 uppercase letters (e.g., USD, EUR)"
+            );
+            return;
+          }
+          if (formData.baseCurrency === formData.targetCurrency) {
+            alert("Base Currency and Target Currency cannot be the same");
+            return;
+          }
+          if (!formData.cost || isNaN(parseFloat(formData.cost))) {
+            alert("Cost must be a valid number");
+            return;
+          }
+          try {
+            const result = await productService.updateProduct(formData.id, {
+              baseCurrency: formData.baseCurrency,
+              targetCurrency: formData.targetCurrency,
+              cost: parseFloat(formData.cost),
+            });
 
+            if (result === null) {
+              alert(`Product with ID ${formData.id} does not exist (update)`);
+              return;
+            }
+
+            // Success case - show confirmation
+            alert(`Product with ID ${formData.id} updated successfully`);
+          } catch (error) {
+            console.error("Error updating product:", error);
+            alert(`Error updating product with ID ${formData.id}`);
+            return;
+          }
+          break;
+        }
+
+        case "delete": {
+          if (
+            !formData.id ||
+            !/^\d+$/.test(formData.id) ||
+            parseInt(formData.id) <= 0
+          ) {
+            alert("ID must be a positive number");
+            return;
+          }
+
+          try {
+            const result = await productService.deleteProduct(formData.id);
+            if (result === null) {
+              alert(`Product with ID ${formData.id} does not exist (delete)`);
+              return;
+            }
+          } catch (error) {
+            console.error("Error deleting product:", error);
+            alert(`Error deleting product with ID ${formData.id}`);
+            return;
+          }
+          break;
+        }
         case "getById":
+          if (
+            !formData.id ||
+            !/^\d+$/.test(formData.id) ||
+            parseInt(formData.id) <= 0
+          ) {
+            alert("ID must be a positive number");
+            return;
+          }
           executeGetById();
           return;
 
@@ -123,10 +204,26 @@ function useProductManagement() {
           executeSort();
           return;
 
-        case "external":
+        case "external": {
+          const currencyRegex = /^[A-Z]{3}$/;
+          if (!currencyRegex.test(formData.baseCurrency)) {
+            alert("Base Currency must be 3 uppercase letters (e.g., USD, EUR)");
+            return;
+          }
+          if (!currencyRegex.test(formData.targetCurrency)) {
+            alert(
+              "Target Currency must be 3 uppercase letters (e.g., USD, EUR)"
+            );
+            return;
+          }
+          if (formData.baseCurrency === formData.targetCurrency) {
+            alert("Base Currency and Target Currency cannot be the same");
+            return;
+          }
           await handleExternalFetch();
           fetchAllProducts();
           return;
+        }
       }
 
       fetchAllProducts();
