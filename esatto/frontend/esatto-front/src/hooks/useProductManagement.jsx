@@ -135,16 +135,29 @@ function useProductManagement() {
             alert("Cost must be a valid number");
             return;
           }
+          try {
+            const result = await productService.updateProduct(formData.id, {
+              baseCurrency: formData.baseCurrency,
+              targetCurrency: formData.targetCurrency,
+              cost: parseFloat(formData.cost),
+            });
 
-          await productService.updateProduct(formData.id, {
-            baseCurrency: formData.baseCurrency,
-            targetCurrency: formData.targetCurrency,
-            cost: parseFloat(formData.cost),
-          });
+            if (result === null) {
+              alert(`Product with ID ${formData.id} does not exist (update)`);
+              return;
+            }
+
+            // Success case - show confirmation
+            alert(`Product with ID ${formData.id} updated successfully`);
+          } catch (error) {
+            console.error("Error updating product:", error);
+            alert(`Error updating product with ID ${formData.id}`);
+            return;
+          }
           break;
         }
 
-        case "delete":
+        case "delete": {
           if (
             !formData.id ||
             !/^\d+$/.test(formData.id) ||
@@ -153,9 +166,20 @@ function useProductManagement() {
             alert("ID must be a positive number");
             return;
           }
-          await productService.deleteProduct(formData.id);
-          break;
 
+          try {
+            const result = await productService.deleteProduct(formData.id);
+            if (result === null) {
+              alert(`Product with ID ${formData.id} does not exist (delete)`);
+              return;
+            }
+          } catch (error) {
+            console.error("Error deleting product:", error);
+            alert(`Error deleting product with ID ${formData.id}`);
+            return;
+          }
+          break;
+        }
         case "getById":
           if (
             !formData.id ||

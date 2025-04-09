@@ -21,9 +21,20 @@ export const productService = {
   // Delete a product by ID
   deleteProduct: async (id) => {
     try {
-      await fetch(`${API_BASE_URL}/products/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/products/${id}`, {
         method: "DELETE",
       });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.log(`[404] Product with ID ${id} not found (delete)`);
+          return null;
+        }
+        console.log(`[${response.status}] Error deleting product`);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      console.log(`Successfully deleted product with ID ${id}`);
       return true;
     } catch (error) {
       console.error("Error deleting product:", error);
@@ -41,7 +52,25 @@ export const productService = {
         },
         body: JSON.stringify(product),
       });
-      return await response.json();
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.log(`[404] Product with ID ${id} not found (update)`);
+          return null;
+        }
+        console.log(`[${response.status}] Error updating product`);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const contentLength = response.headers.get("content-length");
+      if (contentLength && parseInt(contentLength) > 0) {
+        const data = await response.json();
+        console.log(`Successfully updated product with ID ${id}:`, data);
+        return data;
+      } else {
+        console.log(`Successfully updated product with ID ${id} (no content)`);
+        return { id };
+      }
     } catch (error) {
       console.error("Error updating product:", error);
       throw error;
@@ -60,23 +89,21 @@ export const productService = {
   },
 
   // Get product by ID
-  // W pliku productService.jsx zaktualizuj funkcję getProductById:
   getProductById: async (id) => {
     try {
       const response = await fetch(`${API_BASE_URL}/products/${id}`);
+
       if (!response.ok) {
         if (response.status === 404) {
-          console.log(`[404] Product with ID ${id} not found`);
+          console.log(`Product with ID ${id} not found`);
           return null;
         }
-        console.log(`[${response.status}] Error fetching product by ID`);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response.json();
-      console.log(`Successfully fetched product with ID ${id}:`, data);
-      return data;
+
+      return await response.json();
     } catch (error) {
-      console.error("Error fetching product by ID:", error);
+      console.error("Fetch error:", error);
       throw error;
     }
   },

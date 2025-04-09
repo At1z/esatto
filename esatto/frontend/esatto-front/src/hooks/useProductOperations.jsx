@@ -26,28 +26,40 @@ function useProductOperations({
 
   const executeGetById = async () => {
     if (!formData.id) {
-      console.log("Get by ID attempted with empty ID field");
       alert("Please enter an ID");
+      return;
+    }
+
+    // Additional client-side validation
+    if (!/^\d+$/.test(formData.id)) {
+      alert("ID must be a numeric value");
       return;
     }
 
     setLoading(true);
     try {
-      console.log(`Attempting to fetch product with ID: ${formData.id}`);
       const product = await productService.getProductById(formData.id);
-      if (product) {
-        console.log(`Product found with ID ${formData.id}:`, product);
-        setCurrentProduct(product);
-        setDisplayMode("detail");
-      } else {
-        console.log(`Product with ID ${formData.id} not found (404)`);
-        alert(`Product with ID ${formData.id} does not exist`);
+
+      if (product === null) {
+        alert(`Product with ID ${formData.id} was not found.`);
         setDisplayMode("list");
+        setCurrentProduct(null);
+        return;
       }
+
+      setCurrentProduct(product);
+      setDisplayMode("detail");
     } catch (error) {
-      console.error(`Error fetching product with ID ${formData.id}:`, error);
-      alert(`Error: Could not find product with ID ${formData.id}`);
+      console.error(`Error fetching product:`, error);
+
+      let errorMessage = `Could not retrieve product with ID ${formData.id}`;
+      if (error.message.includes("NetworkError")) {
+        errorMessage = "Network error - please check your connection";
+      }
+
+      alert(errorMessage);
       setDisplayMode("list");
+      setCurrentProduct(null);
     } finally {
       setLoading(false);
     }
