@@ -1,26 +1,42 @@
 import React from "react";
+import "./../styles/ProductDetails.css";
 
 function ProductDetail({ product }) {
   if (!product) {
-    return <div>No product selected</div>;
+    return <div className="product-detail-container">No product selected</div>;
+  }
+
+  const fields = [
+    { label: "ID", value: product.id },
+    { label: "Base Currency", value: product.baseCurrency },
+    { label: "Target Currency", value: product.targetCurrency },
+    { label: "Cost", value: product.cost },
+    { label: "Date", value: product.date || "N/A" },
+  ];
+
+  if (product.cheaper !== undefined) {
+    fields.push({
+      label: "Cheaper",
+      value: product.cheaper ? "Yes" : "No",
+    });
   }
 
   return (
-    <div style={{ padding: "10px", textAlign: "left" }}>
-      <h3 style={{ marginTop: 0 }}>Product Details</h3>
-      <p style={{ margin: "5px 0" }}>ID: {product.id}</p>
-      <p style={{ margin: "5px 0" }}>Base Currency: {product.baseCurrency}</p>
-      <p style={{ margin: "5px 0" }}>
-        Target Currency: {product.targetCurrency}
-      </p>
-      <p style={{ margin: "5px 0" }}>Cost: {product.cost}</p>
-      <p style={{ margin: "5px 0" }}>Date: {product.date || "N/A"}</p>
-      {/* Display the cheaper property if it exists */}
-      {product.cheaper !== undefined && (
-        <p style={{ margin: "5px 0" }}>
-          Cheaper: {product.cheaper ? "Yes" : "No"}
-        </p>
-      )}
+    <div className="product-detail-container">
+      <h2 className="product-detail-title">Product Details</h2>
+      <div className="product-detail-rows">
+        {fields.map((field, index) => (
+          <div
+            key={index}
+            className={`product-detail-row ${
+              index % 2 === 1 ? "gray-row" : ""
+            }`}
+          >
+            <span className="product-label">{field.label}:</span>
+            <span className="product-value">{field.value}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

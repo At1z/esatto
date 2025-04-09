@@ -1,4 +1,5 @@
 import React from "react";
+import "./../styles/ProductForm.css";
 
 function ProductForm({
   formData,
@@ -40,17 +41,6 @@ function ProductForm({
     }
   };
 
-  const getFieldStyle = (fieldName) => {
-    return {
-      backgroundColor: disabledFields[fieldName] ? "#e0e0e0" : "white",
-      width: "95%",
-      padding: "7px",
-      borderRadius: "4px",
-      border: "1px solid #645e5e",
-      fontSize: "14px",
-    };
-  };
-
   return (
     <form onSubmit={onSubmit}>
       <div className="form-group">
@@ -62,7 +52,7 @@ function ProductForm({
           value={formData.id}
           onChange={handleInputChange}
           disabled={disabledFields.id}
-          style={getFieldStyle("id")}
+          className={`input-field ${disabledFields.id ? "disabled" : ""}`}
         />
       </div>
       <div className="form-group">
@@ -74,7 +64,9 @@ function ProductForm({
           value={formData.baseCurrency}
           onChange={handleInputChange}
           disabled={disabledFields.baseCurrency}
-          style={getFieldStyle("baseCurrency")}
+          className={`input-field ${
+            disabledFields.baseCurrency ? "disabled" : ""
+          }`}
         />
       </div>
       <div className="form-group">
@@ -86,7 +78,9 @@ function ProductForm({
           value={formData.targetCurrency}
           onChange={handleInputChange}
           disabled={disabledFields.targetCurrency}
-          style={getFieldStyle("targetCurrency")}
+          className={`input-field ${
+            disabledFields.targetCurrency ? "disabled" : ""
+          }`}
         />
       </div>
       <div className="form-group">
@@ -100,7 +94,7 @@ function ProductForm({
           value={formData.cost}
           onChange={handleInputChange}
           disabled={disabledFields.cost}
-          style={getFieldStyle("cost")}
+          className={`input-field ${disabledFields.cost ? "disabled" : ""}`}
         />
       </div>
       <div className="form-group">
@@ -113,7 +107,7 @@ function ProductForm({
           value={formData.page}
           onChange={handleInputChange}
           disabled={disabledFields.page}
-          style={getFieldStyle("page")}
+          className={`input-field ${disabledFields.page ? "disabled" : ""}`}
         />
       </div>
       <div className="form-group">
@@ -126,7 +120,7 @@ function ProductForm({
           value={formData.size}
           onChange={handleInputChange}
           disabled={disabledFields.size}
-          style={getFieldStyle("size")}
+          className={`input-field ${disabledFields.size ? "disabled" : ""}`}
         />
       </div>
       <div className="form-group">
@@ -137,7 +131,7 @@ function ProductForm({
           value={formData.sortBy}
           onChange={handleInputChange}
           disabled={disabledFields.sortBy}
-          style={getFieldStyle("sortBy")}
+          className={`input-field ${disabledFields.sortBy ? "disabled" : ""}`}
         >
           <option value="date">Date</option>
           <option value="baseCurrency">Base Currency</option>
