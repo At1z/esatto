@@ -9,6 +9,7 @@ function useProductManagement() {
     cost: "",
     page: "0",
     size: "5",
+    sortBy: "date",
   };
 
   const [formData, setFormData] = useState(initialFormState);
@@ -24,10 +25,10 @@ function useProductManagement() {
     cost: false,
     page: false,
     size: false,
+    sortBy: false,
   });
   const [activeOperation, setActiveOperation] = useState(null);
 
-  // Initialize by fetching all products
   useEffect(() => {
     fetchAllProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -56,6 +57,7 @@ function useProductManagement() {
       cost: false,
       page: false,
       size: false,
+      sortBy: false,
     });
     setActiveOperation(null);
   };
@@ -99,7 +101,7 @@ function useProductManagement() {
           break;
 
         case "getById":
-          handleGetById();
+          executeGetById();
           return;
 
         case "search":
@@ -109,6 +111,11 @@ function useProductManagement() {
         case "page":
           executePaging();
           return;
+
+        case "sort":
+          executeSort();
+          return;
+
         case "external": {
           const exchangeData = await currencyService.getExchangeRate({
             baseCurrency: formData.baseCurrency,
@@ -154,6 +161,7 @@ function useProductManagement() {
       cost: false,
       page: true,
       size: true,
+      sortBy: true,
     });
     setActiveOperation("add");
     setFormData({
@@ -170,6 +178,7 @@ function useProductManagement() {
       cost: true,
       page: true,
       size: true,
+      sortBy: true,
     });
     setActiveOperation("external");
     setFormData({
@@ -186,6 +195,7 @@ function useProductManagement() {
       cost: true,
       page: true,
       size: true,
+      sortBy: true,
     });
     setActiveOperation("delete");
     setFormData({
@@ -204,6 +214,7 @@ function useProductManagement() {
       cost: false,
       page: true,
       size: true,
+      sortBy: true,
     });
     setActiveOperation("update");
   };
@@ -216,18 +227,22 @@ function useProductManagement() {
       cost: true,
       page: true,
       size: true,
+      sortBy: true,
     });
     setActiveOperation("getById");
 
+    setFormData({
+      ...initialFormState,
+      id: formData.id || "",
+    });
+  };
+
+  const executeGetById = async () => {
     if (!formData.id) {
       alert("Please enter an ID");
       return;
     }
 
-    executeGetById();
-  };
-
-  const executeGetById = async () => {
     setLoading(true);
     try {
       const product = await productService.getProductById(formData.id);
@@ -240,27 +255,40 @@ function useProductManagement() {
           cost: product.cost.toString(),
           page: formData.page,
           size: formData.size,
+          sortBy: formData.sortBy,
         });
         setDisplayMode("detail");
       }
     } catch (error) {
       console.error("Error fetching product:", error);
+      alert("Error: Could not find product with ID " + formData.id);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSort = async () => {
-    resetFieldsState();
-    const sortField = prompt(
-      "Sort by (date, baseCurrency, targetCurrency):",
-      "date"
-    );
+  const handleSort = () => {
+    setDisabledFields({
+      id: true,
+      baseCurrency: true,
+      targetCurrency: true,
+      cost: true,
+      page: true,
+      size: true,
+      sortBy: false,
+    });
+    setActiveOperation("sort");
 
-    if (!sortField) return;
+    setFormData({
+      ...initialFormState,
+      sortBy: formData.sortBy || "date",
+    });
+  };
 
+  const executeSort = async () => {
     setLoading(true);
     try {
+      const sortField = formData.sortBy || "date";
       const sortedProducts = await productService.getSortedProducts(sortField);
       setProducts(sortedProducts);
       setDisplayMode("list");
@@ -279,6 +307,7 @@ function useProductManagement() {
       cost: false,
       page: true,
       size: true,
+      sortBy: true,
     });
     setActiveOperation("search");
 
@@ -316,6 +345,7 @@ function useProductManagement() {
       cost: true,
       page: false,
       size: false,
+      sortBy: true,
     });
     setActiveOperation("page");
 

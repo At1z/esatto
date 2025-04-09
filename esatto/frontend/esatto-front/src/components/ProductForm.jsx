@@ -31,8 +31,10 @@ function ProductForm({
         return "Search Products";
       case "page":
         return "Get Page";
+      case "sort":
+        return "Sort Products";
       case "external":
-        return "Get External Soure";
+        return "Get External Source";
       default:
         return "Submit";
     }
@@ -126,6 +128,21 @@ function ProductForm({
           disabled={disabledFields.size}
           style={getFieldStyle("size")}
         />
+      </div>
+      <div className="form-group">
+        <label htmlFor="sortBy">Sort By</label>
+        <select
+          id="sortBy"
+          name="sortBy"
+          value={formData.sortBy}
+          onChange={handleInputChange}
+          disabled={disabledFields.sortBy}
+          style={getFieldStyle("sortBy")}
+        >
+          <option value="date">Date</option>
+          <option value="baseCurrency">Base Currency</option>
+          <option value="targetCurrency">Target Currency</option>
+        </select>
       </div>
       <button type="submit">{getSubmitButtonText()}</button>
     </form>
