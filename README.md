@@ -35,7 +35,8 @@ docker-compose --env-file .env up
 </code></pre>
 
 <h1>Testing</h1>
-<p>The application works by selecting actions from the left or right column. In the form, inactive fields will turn gray.</p>
+<h3>You can try the application by typing localhost in your browser </h3>
+<h3>The application works by selecting actions from the left or right column. In the form, inactive fields will turn gray.</h3>
 
 <h2>Fields:</h2>
 <ul>
