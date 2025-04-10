@@ -3,6 +3,8 @@
 
 <h1>Setting Up</h1>
 <h2>📦 Docker is required</h2>
+<a href="https://www.docker.com/get-started/" target="_blank">Start with Docker :)</a>
+
 <h3>Clone the repository</h3>
 <pre><code class="language-bash">
 git clone https://github.com/At1z/esatto.git
