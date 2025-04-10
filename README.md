@@ -2,8 +2,8 @@
 <h3>A simple application that provides up-to-date currency exchange rates.</h3>
 
 <h1>Setting Up</h1>
-
-<h3>📦 Clone the repository</h3>
+<h2>📦 Docker is required</h2>
+<h3>Clone the repository</h3>
 <pre><code class="language-bash">
 git clone https://github.com/At1z/esatto.git
 </code></pre>
