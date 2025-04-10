@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/currency")
-@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/api/currency")
+@CrossOrigin(origins = "http://localhost")
 public class APIController {
 
 

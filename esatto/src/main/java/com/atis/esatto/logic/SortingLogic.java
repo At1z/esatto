@@ -4,7 +4,6 @@ import com.atis.esatto.db_creation.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import java.util.Comparator;
 import java.util.List;
 
