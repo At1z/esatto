@@ -27,6 +27,10 @@ CURRENCY_API_KEY=
 <pre><code class="language-bash">
 docker-compose --env-file .env up --build
 </code></pre>
+<pre><code class="language-bash">
+## next time use
+docker-compose --env-file .env up 
+</code></pre>
 
 <h1>Testing</h1>
 <p>The application works by selecting actions from the left or right column. In the form, inactive fields will turn gray.</p>
