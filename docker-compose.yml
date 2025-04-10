@@ -39,7 +39,7 @@ services:
     container_name: esatto-frontend
     restart: always
     ports:
-      - "5137:5137"
+      - "80:80"
     depends_on:
       - backend
     networks:

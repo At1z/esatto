@@ -18,7 +18,7 @@ import java.util.Optional;
 @Validated
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "http://localhost:5137")
+@CrossOrigin(origins = "http://localhost")
 public class ProductController {
 
 

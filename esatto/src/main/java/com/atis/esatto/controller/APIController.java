@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/currency")
-@CrossOrigin(origins = "http://localhost:5137")
+@CrossOrigin(origins = "http://localhost")
 public class APIController {
 
 
