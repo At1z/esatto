@@ -12,9 +12,9 @@ git clone https://github.com/At1z/esatto.git
 <h3>⚙️ Prepare the <code>.env</code> file</h3>
 <p>Create a <code>.env</code> file in the <strong>root directory</strong> with the following structure:</p>
 <pre><code class="language-env">
-DB_URL=
-DB_USERNAME=
-DB_PASSWORD=
+DB_URL=jdbc:postgresql://localhost:5432/esatto
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
 CURRENCY_API_KEY=
 </code></pre>
 <p>💡 You can get your API key from
