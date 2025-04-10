@@ -6,7 +6,6 @@ import com.atis.esatto.service.ProductService;
 import com.atis.esatto.dto.ProductDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,8 +17,8 @@ import java.util.Optional;
 @AllArgsConstructor
 @Validated
 @RestController
-@RequestMapping("/products")
-@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/api/products")
+@CrossOrigin(origins = "http://localhost")
 public class ProductController {
 
 

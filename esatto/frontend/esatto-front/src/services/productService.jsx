@@ -1,5 +1,4 @@
-const API_BASE_URL = "http://localhost:8080";
-
+const API_BASE_URL = "/api";
 export const productService = {
   // Add a new product
   addProduct: async (product) => {
@@ -181,9 +180,20 @@ export const currencyService = {
         },
         body: formData,
       });
+
+      if (response.status === 500) {
+        console.error("No such currency");
+        alert("No such currency");
+        throw new Error("No such currency");
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
       const data = await response.json();
       console.log("Exchange Rate API Response:", data);
-      return await data;
+      return data;
     } catch (error) {
       console.error("Error fetching exchange rate:", error);
       throw error;

@@ -30,7 +30,7 @@ function useProductOperations({
       return;
     }
 
-    // Additional client-side validation
+
     if (!/^\d+$/.test(formData.id)) {
       alert("ID must be a numeric value");
       return;
