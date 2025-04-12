@@ -62,3 +62,14 @@ docker-compose --env-file .env up
         <li><strong>Search For:</strong> Search for records in the database based on specific criteria (e.g., base currency, target currency, or cost) with a given value to filter the results.</li>
         <li><strong>Page:</strong> Specifies the page number and the number of records per page to display in pagination.</li>
 </ul>
+
+<h2>Table</h2>
+<p>The table is sorted by date.</p>
+
+<p>It includes the fields mentioned earlier, plus the following:</p>
+<ul>
+    <li><strong>Cheaper</strong> – a boolean value indicating whether the cost of the latest conversion for the given currency pair is lower than the previous one. This field is updated when using the <em>Add</em> or <em>Update</em> buttons.</li>
+    <li><strong>Date</strong> – the date when the record was created or last modified.</li>
+</ul>
+
+
